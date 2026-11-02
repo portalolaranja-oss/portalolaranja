@@ -35,7 +35,7 @@ function Index() {
       <SiteHeader />
 
       <main className="container-portal space-y-12 py-6 md:py-8">
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           {main && <MainHeadline article={main} />}
           <div className="grid gap-4 sm:grid-cols-2 lg:flex lg:flex-col">
             {sec1 && <SecondaryHeadline article={sec1} />}
@@ -43,10 +43,10 @@ function Index() {
           </div>
         </section>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <section>
             <SectionTitle>Feed de notícias</SectionTitle>
-            <div className="mx-auto max-w-2xl space-y-6 lg:mx-0">
+            <div className="mx-auto max-w-2xl min-w-0 space-y-6 lg:max-w-none">
               <div className="lg:hidden"><WeatherWidget /></div>
               {feed.map((a, i) => (
                 <Fragment key={a.id}>

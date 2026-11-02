@@ -1,11 +1,11 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-export function CategoryTag({ children, live }: { children: React.ReactNode; live?: boolean | undefined }) {
+export function CategoryTag({ children, live, solid }: { children: React.ReactNode; live?: boolean | undefined; solid?: boolean }) {
   return (
     <span className={cn(
       "inline-flex w-fit items-center gap-1.5 rounded-sm px-2 py-0.5 font-display text-[11px] font-bold uppercase tracking-wider",
-      live ? "bg-live text-foreground" : "bg-accent text-accent-foreground",
+      live ? "bg-live text-foreground" : solid ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground",
     )}>
       {live && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-foreground" />}
       {children}
