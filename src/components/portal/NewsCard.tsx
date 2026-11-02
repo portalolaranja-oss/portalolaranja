@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-export function CategoryTag({ children, live }: { children: React.ReactNode; live?: boolean }) {
+export function CategoryTag({ children, live }: { children: React.ReactNode; live?: boolean | undefined }) {
   return (
     <span className={cn(
       "inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 font-display text-[11px] font-bold uppercase tracking-wider",
@@ -28,9 +28,9 @@ export interface NewsCardProps extends VariantProps<typeof card> {
   title: string;
   category: string;
   time: string;
-  excerpt?: string;
-  image?: string;
-  live?: boolean;
+  excerpt?: string | undefined;
+  image?: string | undefined;
+  live?: boolean | undefined;
 }
 
 function Placeholder() {
