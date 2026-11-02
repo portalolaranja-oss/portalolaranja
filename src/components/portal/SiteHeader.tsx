@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { brand, categories } from "@/lib/brand";
+import { SocialLinks } from "./SocialLinks";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -15,21 +16,22 @@ export function SiteHeader() {
         <Link to="/" className="flex min-w-0 items-center justify-center lg:justify-start">
           <img src={brand.logo} alt={brand.name} className="h-12 w-auto md:h-16" />
         </Link>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" aria-label="Buscar"><Search /></Button>
-          <Button size="sm" className="hidden sm:inline-flex">Envie sua notícia</Button>
+        <div className="flex items-center gap-1">
+          <div className="hidden md:block"><SocialLinks /></div>
+          <Button variant="ghost" size="icon" aria-label="Pesquisar"><Search /></Button>
         </div>
       </div>
       <nav className={`${open ? "block" : "hidden"} border-t border-border lg:block`}>
         <ul className="container-portal flex flex-col gap-1 py-2 lg:flex-row lg:gap-6 lg:overflow-x-auto">
           {categories.map((c, i) => (
             <li key={c}>
-              <a href="#" className={`block py-2 font-display text-sm font-semibold uppercase tracking-wide transition-colors hover:text-primary ${i === 0 ? "text-primary" : "text-muted-foreground"}`}>
+              <a href="#" className={`block whitespace-nowrap py-2 font-display text-sm font-semibold uppercase tracking-wide transition-colors hover:text-primary ${i === 0 ? "text-primary" : "text-muted-foreground"}`}>
                 {c}
               </a>
             </li>
           ))}
         </ul>
+        {open && <div className="container-portal border-t border-border py-3 md:hidden"><SocialLinks /></div>}
       </nav>
     </header>
   );

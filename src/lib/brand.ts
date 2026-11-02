@@ -9,15 +9,21 @@ export const brand = {
   logo: logo.url,
   emblema: emblema.url,
   mascote: mascote.url,
+  social: {
+    instagram: "#",
+    facebook: "#",
+    whatsapp: "#",
+  },
+  commercialEmail: "comercial@portalolaranja.com.br",
 };
 
 export const categories = [
-  "Últimas",
-  "Cidade",
-  "Política",
+  "Início",
+  "Nova Iguaçu",
+  "Baixada",
+  "Rio de Janeiro",
   "Polícia",
+  "Política",
   "Esportes",
-  "Cultura",
-  "Economia",
-  "Saúde",
+  "Entretenimento",
 ];
