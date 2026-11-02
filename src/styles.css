@@ -39,6 +39,7 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-live: var(--live);
   --color-surface: var(--surface);
+  --color-ink: var(--ink);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -50,6 +51,7 @@
   /* Superfícies */
   --background: oklch(0.13 0.004 60);        /* preto sofisticado */
   --surface: oklch(0.17 0.005 60);           /* grafite */
+  --ink: oklch(0 0 0);                       /* preto puro dos arquivos da marca */
   --card: oklch(0.19 0.006 60);
   --card-foreground: oklch(0.97 0 0);
   --popover: oklch(0.19 0.006 60);
