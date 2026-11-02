@@ -49,7 +49,7 @@ function Index() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
+        <section className="relative overflow-hidden rounded-2xl border border-border bg-background shadow-card">
           <div className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_auto]">
             <div className="space-y-4 p-8 md:p-12">
               <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary">{brand.city}</p>

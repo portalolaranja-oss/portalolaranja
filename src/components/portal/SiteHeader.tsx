@@ -8,7 +8,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
-      <div className="container-portal grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 md:h-20">
+      <div className="container-portal grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 md:h-20 lg:flex lg:justify-between">
         <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
           {open ? <X /> : <Menu />}
         </Button>
