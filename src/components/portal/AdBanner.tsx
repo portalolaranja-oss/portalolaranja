@@ -10,12 +10,12 @@ export function AdBanner({ ad, variant = "horizontal" }: { ad: Ad; variant?: "ho
       <a
         href={ad.href}
         {...(external ? { target: "_blank", rel: "noopener noreferrer sponsored" } : {})}
-        className={`group relative block overflow-hidden rounded-2xl border border-border bg-ink shadow-card transition-colors hover:border-primary/50 ${variant === "horizontal" ? "aspect-[16/5] min-h-36" : "aspect-square"}`}
+        className={`group relative block overflow-hidden rounded-2xl border border-border bg-ink shadow-card transition-colors hover:border-primary/50 ${variant === "horizontal" ? "min-h-36 md:aspect-[16/5]" : "aspect-square"}`}
       >
         {ad.image ? (
           <img src={ad.image} alt={ad.advertiser} loading="lazy" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full items-center gap-5 bg-gradient-to-r from-ink via-surface to-ink p-6">
+          <div className="flex h-full min-h-[inherit] items-center gap-5 bg-gradient-to-r from-ink via-surface to-ink p-6">
             <img src={brand.emblema} alt="" className={`shrink-0 rounded-full ${variant === "horizontal" ? "h-20 w-20 md:h-24 md:w-24" : "hidden"}`} />
             <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-widest text-primary">{ad.advertiser}</p>
