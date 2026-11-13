@@ -13,12 +13,14 @@ import {
   Megaphone,
   Clock,
   Database,
+  CloudSun,
 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { demoArticles } from "@/data/demo";
 import { articleLink } from "@/lib/links";
 import { hasSupabaseClient } from "@/lib/news";
+import { hasClimatempoKey, WEATHER_CITY } from "@/lib/weather";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/")({
@@ -61,7 +63,7 @@ function Overview() {
       <section className="grid gap-4 md:grid-cols-3">
         <QuickAction to="/admin/criar" icon={PenSquare} title="Criar notícia" desc="Escreva e publique uma nova matéria." />
         <QuickAction to="/admin/publicadas" icon={Newspaper} title="Gerenciar notícias" desc="Edite e organize as publicações." />
-        <QuickAction to="/admin/rascunhos" icon={FileEdit} title="Rascunhos" desc="Continue o que ficou pela metade." />
+        <QuickAction to="/admin/clima" icon={CloudSun} title="Clima" desc="Gerencie a integração meteorológica." />
       </section>
 
       {/* Status da integração */}
@@ -81,6 +83,28 @@ function Overview() {
               : "Conecte a integração Supabase no painel para publicar no portal de verdade."}
           </p>
         </div>
+      </section>
+
+      {/* Status da integração do clima */}
+      <section className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-card">
+        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
+          <CloudSun className="h-4.5 w-4.5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold">
+            Clima em {WEATHER_CITY.name} —{" "}
+            {hasClimatempoKey()
+              ? "Climatempo configurado."
+              : "Open-Meteo ativo (configure o Climatempo para priorizar a API oficial)."}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Dados reais com cache e atualização automática; se a API falhar, o site avisa que o clima está
+            indisponível.
+          </p>
+        </div>
+        <Link to="/admin/clima" className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+          Gerenciar clima <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">

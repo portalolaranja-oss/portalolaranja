@@ -13,6 +13,7 @@ import {
   FolderTree,
   Users,
   Settings,
+  CloudSun,
   LogOut,
   X,
 } from "lucide-react";
@@ -30,6 +31,7 @@ export const adminMenu = [
   { label: "Publicidade", to: "/admin/publicidade", icon: Share2 },
   { label: "RSS e integrações", to: "/admin/rss", icon: Rss },
   { label: "Redes sociais", to: "/admin/redes", icon: Share },
+  { label: "Clima", to: "/admin/clima", icon: CloudSun },
   { label: "Categorias", to: "/admin/categorias", icon: FolderTree },
   { label: "Usuários", to: "/admin/usuarios", icon: Users },
   { label: "Configurações", to: "/admin/configuracoes", icon: Settings },

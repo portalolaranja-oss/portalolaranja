@@ -7,6 +7,7 @@ import { MainHeadline, SecondaryHeadline } from "@/components/portal/Headlines";
 import { FeedPost } from "@/components/portal/FeedPost";
 import { AdBanner } from "@/components/portal/AdBanner";
 import { LatestWidget, LotteryWidget, MostReadWidget, SportsWidget, WeatherWidget } from "@/components/portal/Widgets";
+import { WeatherCard } from "@/components/portal/WeatherCard";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/brand";
 import { demoAds, demoArticles, type Article } from "@/data/demo";
@@ -55,6 +56,11 @@ function Index() {
             {sec1 && <SecondaryHeadline article={sec1} />}
             {sec2 && <SecondaryHeadline article={sec2} />}
           </div>
+        </section>
+
+        {/* Clima em Nova Iguaçu — dados reais da API meteorológica */}
+        <section>
+          <WeatherCard />
         </section>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">

@@ -31,6 +31,7 @@ function Section() {
     publicidade: { title: "Publicidade", desc: "Banners e anunciantes." },
     rss: { title: "RSS e integrações", desc: "Fontes e feeds externos." },
     redes: { title: "Redes sociais", desc: "Conexão com as plataformas." },
+    clima: { title: "Clima em Nova Iguaçu", desc: "Integração meteorológica do portal." },
     categorias: { title: "Categorias", desc: "Editorias do portal." },
     usuarios: { title: "Usuários", desc: "Equipe e permissões." },
     configuracoes: { title: "Configurações", desc: "Preferências do painel." },
@@ -53,6 +54,12 @@ function Section() {
   // do editor). Aqui só redirecionamos — a lógica vive no arquivo dela.
   if (section === "templates") {
     navigate({ to: "/admin/templates", replace: true });
+    return null;
+  }
+
+  // Idem para o gerenciador de clima (rota estática /admin/clima).
+  if (section === "clima") {
+    navigate({ to: "/admin/clima", replace: true });
     return null;
   }
 

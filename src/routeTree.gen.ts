@@ -19,6 +19,8 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminSectionRouteImport } from './routes/admin/$section'
 import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
 import { Route as AdminRedesRouteImport } from './routes/admin/redes'
+import { Route as ClimaRouteImport } from './routes/clima'
+import { Route as AdminClimaRouteImport } from './routes/admin/clima'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +72,16 @@ const AdminRedesRoute = AdminRedesRouteImport.update({
   path: '/admin/redes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClimaRoute = ClimaRouteImport.update({
+  id: '/clima',
+  path: '/clima',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminClimaRoute = AdminClimaRouteImport.update({
+  id: '/admin/clima',
+  path: '/admin/clima',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +94,8 @@ export interface FileRoutesByFullPath {
   '/admin/$section': typeof AdminSectionRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/redes': typeof AdminRedesRoute
+  '/clima': typeof ClimaRoute
+  '/admin/clima': typeof AdminClimaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +108,8 @@ export interface FileRoutesByTo {
   '/admin/$section': typeof AdminSectionRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/redes': typeof AdminRedesRoute
+  '/clima': typeof ClimaRoute
+  '/admin/clima': typeof AdminClimaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,13 +123,15 @@ export interface FileRoutesById {
   '/admin/$section': typeof AdminSectionRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/redes': typeof AdminRedesRoute
+  '/clima': typeof ClimaRoute
+  '/admin/clima': typeof AdminClimaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name' | '/admin/' | '/admin/login' | '/admin/$section' | '/admin/templates' | '/admin/redes'
+  fullPaths: '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name' | '/admin/' | '/admin/login' | '/admin/$section' | '/admin/templates' | '/admin/redes' | '/clima' | '/admin/clima'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name' | '/admin/' | '/admin/login' | '/admin/$section' | '/admin/templates' | '/admin/redes'
-  id: '__root__' | '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name' | '/admin/' | '/admin/login' | '/admin/$section' | '/admin/templates' | '/admin/redes'
+  to: '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name' | '/admin/' | '/admin/login' | '/admin/$section' | '/admin/templates' | '/admin/redes' | '/clima' | '/admin/clima'
+  id: '__root__' | '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name' | '/admin/' | '/admin/login' | '/admin/$section' | '/admin/templates' | '/admin/redes' | '/clima' | '/admin/clima'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -127,6 +145,8 @@ export interface RootRouteChildren {
   AdminSectionRoute: typeof AdminSectionRoute
   AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminRedesRoute: typeof AdminRedesRoute
+  ClimaRoute: typeof ClimaRoute
+  AdminClimaRoute: typeof AdminClimaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -201,6 +221,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRedesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clima': {
+      id: '/clima'
+      path: '/clima'
+      fullPath: '/clima'
+      preLoaderRoute: typeof ClimaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/clima': {
+      id: '/admin/clima'
+      path: '/admin/clima'
+      fullPath: '/admin/clima'
+      preLoaderRoute: typeof AdminClimaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -215,6 +249,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSectionRoute: AdminSectionRoute,
   AdminTemplatesRoute: AdminTemplatesRoute,
   AdminRedesRoute: AdminRedesRoute,
+  ClimaRoute: ClimaRoute,
+  AdminClimaRoute: AdminClimaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

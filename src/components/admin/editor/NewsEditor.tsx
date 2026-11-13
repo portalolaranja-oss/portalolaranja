@@ -12,6 +12,7 @@ import {
   FileEdit,
   EyeOff,
   Images,
+  CloudSun,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -212,6 +213,14 @@ export function NewsEditor({
             title="Abrir o Gerador de Templates Sociais com os dados desta notícia"
           >
             <Images className="h-4 w-4" /> Gerar artes
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/admin/clima" })}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-input px-3 py-2 text-sm font-semibold transition-colors hover:bg-accent"
+            title="Abrir a área de clima do dashboard"
+          >
+            <CloudSun className="h-4 w-4" /> Clima
           </button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
