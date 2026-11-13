@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Construction, Pencil, Plus } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { NewsEditor } from "@/components/admin/editor/NewsEditor";
 import { NewsManager } from "@/components/admin/NewsManager";
 import { Button } from "@/components/ui/button";
+import { takePendingArticle } from "@/lib/template-handoff";
 
 export const Route = createFileRoute("/admin/$section")({
   head: () => ({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/admin/$section")({
 
 function Section() {
   const { section = "visao" } = Route.useParams();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<
     | { view: "list" }
     | { view: "editor"; id?: string; title?: string }
@@ -47,8 +49,16 @@ function Section() {
     setMode({ view: "list" });
   }
 
+  // A rota estática /admin/templates cuida do gerador (e do handoff vindo
+  // do editor). Aqui só redirecionamos — a lógica vive no arquivo dela.
+  if (section === "templates") {
+    navigate({ to: "/admin/templates", replace: true });
+    return null;
+  }
+
   // Editor completo (criar ou editar) — usa Supabase (ou fallback local).
   if (editorOpen) {
+    const pending = mode.view === "editor" ? null : takePendingArticle();
     return (
       <AdminLayout
         current={`/admin/${section}`}
@@ -63,6 +73,7 @@ function Section() {
         <NewsEditor
           key={editingId ?? "novo"}
           editId={editingId}
+          initialArticle={pending}
           onDone={closeEditor}
         />
       </AdminLayout>

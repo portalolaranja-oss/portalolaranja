@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
   Save,
@@ -10,6 +11,7 @@ import {
   Loader2,
   FileEdit,
   EyeOff,
+  Images,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +30,8 @@ import {
   type ArticleFormData,
   type NewsStatus,
 } from "@/lib/news";
-import { formatDate } from "@/data/demo";
+import { formatDate, type Article } from "@/data/demo";
+import { setPendingArticle } from "@/lib/template-handoff";
 
 function emptyForm(): ArticleFormData {
   return {
@@ -48,7 +51,17 @@ function emptyForm(): ArticleFormData {
   };
 }
 
-export function NewsEditor({ editId, onDone }: { editId?: string; onDone: (msg?: string) => void }) {
+export function NewsEditor({
+  editId,
+  onDone,
+  initialArticle,
+}: {
+  editId?: string;
+  onDone: (msg?: string) => void;
+  /** Notícia pré-carregada (ex.: vinda do Gerador de Templates). */
+  initialArticle?: Article | null;
+}) {
+  const navigate = useNavigate();
   const [form, setForm] = useState<ArticleFormData>(emptyForm);
   const [loading, setLoading] = useState(Boolean(editId));
   const [loaded, setLoaded] = useState(false);
@@ -78,6 +91,31 @@ export function NewsEditor({ editId, onDone }: { editId?: string; onDone: (msg?:
       });
   }
 
+  // Notícia pré-carregada pelo Gerador de Templates (sem id = rascunho novo).
+  useEffect(() => {
+    if (!initialArticle || editId) return;
+    setForm({
+      title: initialArticle.title,
+      subtitle: initialArticle.subtitle ?? initialArticle.excerpt ?? "",
+      body: "",
+      coverImage: initialArticle.image ?? "",
+      gallery: [],
+      category: initialArticle.category || CATEGORY_OPTIONS[0],
+      tags: [],
+      author: initialArticle.author || "",
+      source: initialArticle.source ?? "",
+      credits: initialArticle.credits ?? "",
+      status: "draft",
+      scheduledAt: "",
+      seo: {
+        title: initialArticle.title,
+        description: initialArticle.excerpt ?? "",
+        slug: initialArticle.slug,
+      },
+    });
+    setLoaded(true);
+  }, [initialArticle, editId]);
+
   if (editId && loading) {
     return (
       <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
@@ -102,6 +140,24 @@ export function NewsEditor({ editId, onDone }: { editId?: string; onDone: (msg?:
     // insere a imagem recém-enviada no corpo do editor
     set("body", form.body + `<p><img src="${url}" alt="imagem"/></p>`);
     if (!form.coverImage) set("coverImage", url);
+  }
+
+  function goGenerateArts() {
+    // Monta a notícia atual (com os campos em edição) e a entrega ao gerador.
+    const a: Article = {
+      id: editId ?? "novo",
+      slug: form.seo.slug || slugify(form.title) || "novo",
+      category: form.category || CATEGORY_OPTIONS[0],
+      title: form.title || "Título da notícia",
+      subtitle: form.subtitle,
+      excerpt: form.subtitle,
+      body: [],
+      image: form.coverImage,
+      publishedAt: form.scheduledAt || new Date().toISOString(),
+      author: form.author || "Redação O Laranja",
+    };
+    setPendingArticle(a);
+    navigate({ to: "/admin/templates" });
   }
 
   async function persist(status: NewsStatus) {
@@ -148,6 +204,14 @@ export function NewsEditor({ editId, onDone }: { editId?: string; onDone: (msg?:
           >
             {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             {preview ? "Editar" : "Pré-visualizar"}
+          </button>
+          <button
+            type="button"
+            onClick={goGenerateArts}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-input px-3 py-2 text-sm font-semibold transition-colors hover:bg-accent"
+            title="Abrir o Gerador de Templates Sociais com os dados desta notícia"
+          >
+            <Images className="h-4 w-4" /> Gerar artes
           </button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
