@@ -27,6 +27,7 @@ export function SiteFooter() {
           <p className="mb-3 font-display text-sm font-bold uppercase tracking-wide">Institucional</p>
           <ul className="space-y-2 text-sm text-muted-foreground">
             {[...institutional, ...legal].map((l) => <li key={l}><a href="#" className="hover:text-primary">{l}</a></li>)}
+            <li><Link to="/admin/login" className="hover:text-primary">Área administrativa</Link></li>
           </ul>
         </div>
         <div>
