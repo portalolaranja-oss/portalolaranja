@@ -2,8 +2,9 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // Cliente Supabase do Portal O Laranja.
 //
-// As credenciais NÃO ficam no código: o Lovable injeta `VITE_SUPABASE_URL` e
-// `VITE_SUPABASE_ANON_KEY` quando o Supabase é conectado ao projeto (Integrações).
+// As credenciais NÃO ficam no código: as variáveis `VITE_SUPABASE_URL` e
+// `VITE_SUPABASE_ANON_KEY` são injetadas pelo build quando o Supabase é
+// conectado ao projeto (Integrações).
 // A chave anon é pública por design e pode viver no frontend; a chave `service_role`
 // NUNCA deve aparecer aqui.
 //

@@ -1,7 +1,7 @@
 // Autenticação do painel O Laranja.
 //
 // Este módulo trabalha em dois modos:
-//   1) SUPABASE — quando a integração está conectada no Lovable
+//   1) SUPABASE — quando a integração Supabase está conectada
 //      (`src/integrations/supabase/client.ts` devolve um cliente != null),
 //      toda a auth vira Supabase Auth real: `signInWithPassword`,
 //      `getUser()` e `signOut()`. A sessão vive no cookie gerenciado pelo

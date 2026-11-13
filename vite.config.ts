@@ -4,6 +4,9 @@
 //     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
 //     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+//
+// (A infra depende do pacote `@lovable.dev/vite-tanstack-config` que o template traz —
+//  não se mexa nele nem o remova.)
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({

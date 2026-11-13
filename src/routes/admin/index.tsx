@@ -78,7 +78,7 @@ function Overview() {
           <p className="text-xs text-muted-foreground">
             {hasSupabaseClient
               ? "As notícias criadas entram na home e nas categorias automaticamente."
-              : "Conecte a integração no painel Lovable para publicar no portal de verdade."}
+              : "Conecte a integração Supabase no painel para publicar no portal de verdade."}
           </p>
         </div>
       </section>
