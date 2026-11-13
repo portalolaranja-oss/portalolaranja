@@ -96,7 +96,7 @@ function Section() {
 
   return (
     <AdminLayout current={`/admin/${section}`} title={meta.title} description={meta.desc}>
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card px-6 py-20 text-center shadow-card">
+<div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card px-6 py-20 text-center shadow-card">
         <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
           <Construction className="h-6 w-6" />
         </span>
