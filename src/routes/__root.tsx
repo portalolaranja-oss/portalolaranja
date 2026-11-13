@@ -11,6 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { hideLovableWatermark } from "@/lib/hide-lovable";
 
 function NotFoundComponent() {
   return (
@@ -116,6 +117,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    hideLovableWatermark();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
