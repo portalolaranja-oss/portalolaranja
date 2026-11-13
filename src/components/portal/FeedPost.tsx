@@ -1,7 +1,9 @@
 import { BookOpen, Share2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/brand";
 import { formatDate, type Article } from "@/data/demo";
+import { articleLink } from "@/lib/links";
 import { CategoryTag } from "./NewsCard";
 
 export function FeedPost({ article }: { article: Article }) {
@@ -22,16 +24,16 @@ export function FeedPost({ article }: { article: Article }) {
         </div>
         <CategoryTag>{article.category}</CategoryTag>
       </header>
-      <a href="#" className="group block aspect-video overflow-hidden">
+      <Link to={articleLink(article.slug)} className="group block aspect-video overflow-hidden">
         <img src={article.image} alt="" loading="lazy" width={1280} height={720} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-      </a>
+      </Link>
       <div className="space-y-2 px-4 pt-4 md:px-5">
-        <h3 className="text-xl font-extrabold leading-snug md:text-2xl"><a href="#" className="hover:text-primary">{article.title}</a></h3>
+        <h3 className="text-xl font-extrabold leading-snug md:text-2xl"><Link to={articleLink(article.slug)} className="hover:text-primary">{article.title}</Link></h3>
         <p className="text-muted-foreground">{article.excerpt}</p>
       </div>
       <footer className="flex items-center justify-between gap-2 px-4 py-4 md:px-5">
         <Button variant="ghost" size="sm" onClick={share}><Share2 /> Compartilhar</Button>
-        <Button size="sm" asChild><a href="#"><BookOpen /> Ler completa</a></Button>
+        <Button size="sm" asChild><Link to={articleLink(article.slug)}><BookOpen /> Ler completa</Link></Button>
       </footer>
     </article>
   );

@@ -1,5 +1,7 @@
 import { CloudSun, Ticket, Trophy } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { demoLottery, demoMatches, demoWeather, formatDate, type Article } from "@/data/demo";
+import { articleLink } from "@/lib/links";
 
 function DemoBadge() {
   return <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Exemplo</span>;
@@ -78,7 +80,7 @@ export function MostReadWidget({ articles }: { articles: Article[] }) {
         {sorted.map((a, i) => (
           <li key={a.id} className="grid grid-cols-[auto_minmax(0,1fr)] gap-3">
             <span className="font-display text-3xl font-extrabold leading-none text-gradient-brand">{i + 1}</span>
-            <a href="#" className="line-clamp-3 text-sm font-semibold leading-snug hover:text-primary">{a.title}</a>
+            <Link to={articleLink(a.slug)} className="line-clamp-3 text-sm font-semibold leading-snug hover:text-primary">{a.title}</Link>
           </li>
         ))}
       </ol>
@@ -93,7 +95,7 @@ export function LatestWidget({ articles }: { articles: Article[] }) {
         {articles.slice(0, 5).map((a) => (
           <li key={a.id} className="border-l-2 border-primary pl-3">
             <time className="text-xs text-muted-foreground">{formatDate(a.publishedAt)}</time>
-            <a href="#" className="line-clamp-2 text-sm font-semibold hover:text-primary">{a.title}</a>
+            <Link to={articleLink(a.slug)} className="line-clamp-2 text-sm font-semibold hover:text-primary">{a.title}</Link>
           </li>
         ))}
       </ul>

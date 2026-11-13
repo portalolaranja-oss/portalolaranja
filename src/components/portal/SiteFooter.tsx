@@ -1,4 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { brand, categories } from "@/lib/brand";
+import { categoryPath } from "@/lib/links";
 import { SocialLinks } from "./SocialLinks";
 
 const institutional = ["Quem somos", "Expediente", "Fale conosco", "Anuncie"];
@@ -18,7 +20,7 @@ export function SiteFooter() {
         <div>
           <p className="mb-3 font-display text-sm font-bold uppercase tracking-wide">Categorias</p>
           <ul className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-            {categories.slice(1).map((c) => <li key={c}><a href="#" className="hover:text-primary">{c}</a></li>)}
+            {categories.slice(1).map((c) => <li key={c}><Link to={categoryPath(c)} className="hover:text-primary">{c}</Link></li>)}
           </ul>
         </div>
         <div>

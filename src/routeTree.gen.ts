@@ -10,33 +10,73 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PesquisaRouteImport } from './routes/pesquisa'
+import { Route as NoticiaSlugRouteImport } from './routes/noticia/$slug'
+import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
+import { Route as CategoriasNameRouteImport } from './routes/categorias/$name'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PesquisaRoute = PesquisaRouteImport.update({
+  id: '/pesquisa',
+  path: '/pesquisa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoticiaSlugRoute = NoticiaSlugRouteImport.update({
+  id: '/noticia/$slug',
+  path: '/noticia/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriasIndexRoute = CategoriasIndexRouteImport.update({
+  id: '/categorias/',
+  path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriasNameRoute = CategoriasNameRouteImport.update({
+  id: '/categorias/$name',
+  path: '/categorias/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/pesquisa': typeof PesquisaRoute
+  '/noticia/$slug': typeof NoticiaSlugRoute
+  '/categorias/': typeof CategoriasIndexRoute
+  '/categorias/$name': typeof CategoriasNameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/pesquisa': typeof PesquisaRoute
+  '/noticia/$slug': typeof NoticiaSlugRoute
+  '/categorias/': typeof CategoriasIndexRoute
+  '/categorias/$name': typeof CategoriasNameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/pesquisa': typeof PesquisaRoute
+  '/noticia/$slug': typeof NoticiaSlugRoute
+  '/categorias/': typeof CategoriasIndexRoute
+  '/categorias/$name': typeof CategoriasNameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name'
+  id: '__root__' | '/' | '/pesquisa' | '/noticia/$slug' | '/categorias/' | '/categorias/$name'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PesquisaRoute: typeof PesquisaRoute
+  NoticiaSlugRoute: typeof NoticiaSlugRoute
+  CategoriasIndexRoute: typeof CategoriasIndexRoute
+  CategoriasNameRoute: typeof CategoriasNameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +88,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pesquisa': {
+      id: '/pesquisa'
+      path: '/pesquisa'
+      fullPath: '/pesquisa'
+      preLoaderRoute: typeof PesquisaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/noticia/$slug': {
+      id: '/noticia/$slug'
+      path: '/noticia/$slug'
+      fullPath: '/noticia/$slug'
+      preLoaderRoute: typeof NoticiaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorias/': {
+      id: '/categorias/'
+      path: '/categorias'
+      fullPath: '/categorias/'
+      preLoaderRoute: typeof CategoriasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorias/$name': {
+      id: '/categorias/$name'
+      path: '/categorias/$name'
+      fullPath: '/categorias/$name'
+      preLoaderRoute: typeof CategoriasNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PesquisaRoute: PesquisaRoute,
+  NoticiaSlugRoute: NoticiaSlugRoute,
+  CategoriasIndexRoute: CategoriasIndexRoute,
+  CategoriasNameRoute: CategoriasNameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

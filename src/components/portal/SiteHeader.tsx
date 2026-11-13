@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { brand, categories } from "@/lib/brand";
+import { categoryPath } from "@/lib/links";
 import { SocialLinks } from "./SocialLinks";
 
 export function SiteHeader() {
@@ -18,16 +19,22 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-1">
           <div className="hidden md:block"><SocialLinks /></div>
-          <Button variant="ghost" size="icon" aria-label="Pesquisar"><Search /></Button>
+          <Button variant="ghost" size="icon" asChild aria-label="Pesquisar"><Link to="/pesquisa"><Search /></Link></Button>
         </div>
       </div>
       <nav className={`${open ? "block" : "hidden"} border-t border-border lg:block`}>
         <ul className="container-portal flex flex-col gap-1 py-2 lg:flex-row lg:gap-6 lg:overflow-x-auto">
           {categories.map((c, i) => (
             <li key={c}>
-              <a href="#" className={`block whitespace-nowrap py-2 font-display text-sm font-semibold uppercase tracking-wide transition-colors hover:text-primary ${i === 0 ? "text-primary" : "text-muted-foreground"}`}>
-                {c}
-              </a>
+              {c === "Início" ? (
+                <Link to="/" className={`block whitespace-nowrap py-2 font-display text-sm font-semibold uppercase tracking-wide transition-colors hover:text-primary ${i === 0 ? "text-primary" : "text-muted-foreground"}`}>
+                  {c}
+                </Link>
+              ) : (
+                <Link to={categoryPath(c)} className={`block whitespace-nowrap py-2 font-display text-sm font-semibold uppercase tracking-wide transition-colors hover:text-primary ${i === 0 ? "text-primary" : "text-muted-foreground"}`}>
+                  {c}
+                </Link>
+              )}
             </li>
           ))}
         </ul>

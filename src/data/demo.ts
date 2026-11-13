@@ -10,6 +10,7 @@ export interface Article {
   category: string;
   title: string;
   excerpt: string;
+  body?: string[]; // parágrafos do texto completo
   image: string;
   publishedAt: string; // ISO
   author: string;
@@ -50,6 +51,13 @@ export const demoMatches = [
   { home: "Flamengo", away: "Vasco", score: "2 × 1", info: "Encerrado" },
   { home: "Fluminense", away: "Botafogo", score: "— × —", info: "Domingo, 16h" },
 ];
+
+/** Ajusta a categoria exibida no menu para o nome interno do demo. */
+export function matchCategory(query: string | null | undefined): string | null {
+  if (!query) return null;
+  const found = demoArticles.find((a) => a.category.toLowerCase() === query.toLowerCase());
+  return found ? found.category : null;
+}
 
 export function formatDate(iso: string) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" }).format(new Date(iso));
