@@ -9,12 +9,17 @@ export interface Article {
   slug: string;
   category: string;
   title: string;
+  subtitle?: string;
   excerpt: string;
   body?: string[]; // parágrafos do texto completo
   image: string;
   publishedAt: string; // ISO
   author: string;
   views?: number;
+  tags?: string[];
+  source?: string;
+  credits?: string;
+  gallery?: string[]; // URLs da galeria de fotos
 }
 
 export interface Ad {

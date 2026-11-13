@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Construction } from "lucide-react";
+import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Construction, Pencil, Plus } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { NewsEditor } from "@/components/admin/editor/NewsEditor";
+import { NewsManager } from "@/components/admin/NewsManager";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/$section")({
   head: () => ({
@@ -11,7 +15,11 @@ export const Route = createFileRoute("/admin/$section")({
 
 function Section() {
   const { section = "visao" } = Route.useParams();
-  const name = section;
+  const [mode, setMode] = useState<
+    | { view: "list" }
+    | { view: "editor"; id?: string; title?: string }
+  >({ view: "list" });
+
   const titles: Record<string, { title: string; desc: string }> = {
     garimpo: { title: "Garimpo de notícias", desc: "Pautas e conteúdos em triagem." },
     criar: { title: "Criar notícia", desc: "Editor de nova publicação." },
@@ -26,10 +34,57 @@ function Section() {
     configuracoes: { title: "Configurações", desc: "Preferências do painel." },
   };
 
-  const meta = titles[name] ?? { title: "Visão geral", desc: "Resumo do painel." };
+  const meta = titles[section] ?? { title: "Visão geral", desc: "Resumo do painel." };
+
+  const editorOpen = section === "criar" || mode.view === "editor";
+  const editingId = mode.view === "editor" ? mode.id : undefined;
+  const editingTitle = mode.view === "editor" ? mode.title : undefined;
+
+  function openEditor(id?: string, title?: string) {
+    setMode({ view: "editor", id, title });
+  }
+  function closeEditor() {
+    setMode({ view: "list" });
+  }
+
+  // Editor completo (criar ou editar) — usa Supabase (ou fallback local).
+  if (editorOpen) {
+    return (
+      <AdminLayout
+        current={`/admin/${section}`}
+        title={editingId ? `Editar: ${editingTitle ?? "notícia"}` : meta.title}
+        description={editingId ? "Ajuste e republique a matéria." : meta.desc}
+      >
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <Button variant="ghost" size="sm" onClick={closeEditor}>
+            ← Voltar à lista
+          </Button>
+        </div>
+        <NewsEditor
+          key={editingId ?? "novo"}
+          editId={editingId}
+          onDone={closeEditor}
+        />
+      </AdminLayout>
+    );
+  }
+
+  // Gerenciadores de lista por status.
+  const managerFilter =
+    section === "publicadas" ? "published" : section === "rascunhos" ? "draft" : "all";
+  if (section === "publicadas" || section === "rascunhos") {
+    return (
+      <AdminLayout current={`/admin/${section}`} title={meta.title} description={meta.desc}>
+        <NewsManager
+          initialFilter={managerFilter}
+          onEdit={(id, title) => openEditor(id, title)}
+        />
+      </AdminLayout>
+    );
+  }
 
   return (
-    <AdminLayout current={`/admin/${name}`} title={meta.title} description={meta.desc}>
+    <AdminLayout current={`/admin/${section}`} title={meta.title} description={meta.desc}>
       <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card px-6 py-20 text-center shadow-card">
         <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
           <Construction className="h-6 w-6" />
@@ -38,6 +93,18 @@ function Section() {
         <p className="mt-1 max-w-md text-sm text-muted-foreground">
           Esta área do painel ainda será desenvolvida. A estrutura visual e a navegação já estão prontas para receber o conteúdo e a integração futura com o Supabase.
         </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link to="/admin/criar" asChild>
+            <Button variant="hero" size="sm">
+              <Plus className="mr-1.5 h-4 w-4" /> Criar notícia
+            </Button>
+          </Link>
+          <Link to="/admin/publicadas" asChild>
+            <Button variant="outline" size="sm">
+              <Pencil className="mr-1.5 h-4 w-4" /> Ver publicadas
+            </Button>
+          </Link>
+        </div>
       </div>
     </AdminLayout>
   );

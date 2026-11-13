@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/portal/SiteHeader";
 import { SiteFooter } from "@/components/portal/SiteFooter";
@@ -9,7 +9,8 @@ import { AdBanner } from "@/components/portal/AdBanner";
 import { LatestWidget, LotteryWidget, MostReadWidget, SportsWidget, WeatherWidget } from "@/components/portal/Widgets";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/brand";
-import { demoAds, demoArticles } from "@/data/demo";
+import { demoAds, demoArticles, type Article } from "@/data/demo";
+import { getPortalArticles } from "@/lib/news";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,10 +29,23 @@ export const Route = createFileRoute("/")({
 const AD_AFTER = 2; // posição do banner central no feed
 
 function Index() {
-  const [main, sec1, sec2, ...feed] = demoArticles;
+  const [articles, setArticles] = useState<Article[]>(demoArticles);
+
+  // Combina o demo com as notícias publicadas no Supabase (quando conectado).
+  useEffect(() => {
+    let active = true;
+    getPortalArticles().then((list) => {
+      if (active && list.length) setArticles(list);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const [main, sec1, sec2, ...feed] = articles;
   return (
     <div className="min-h-screen">
-      <BreakingTicker items={demoArticles.slice(0, 4).map((a) => a.title)} />
+      <BreakingTicker items={articles.slice(0, 4).map((a) => a.title)} />
       <SiteHeader />
 
       <main className="container-portal space-y-12 py-6 md:py-8">
@@ -59,8 +73,8 @@ function Index() {
 
           <aside className="space-y-6 lg:sticky lg:top-40 lg:self-start">
             <div className="hidden lg:block"><WeatherWidget /></div>
-            <MostReadWidget articles={demoArticles} />
-            <div className="hidden lg:block"><LatestWidget articles={demoArticles} /></div>
+            <MostReadWidget articles={articles} />
+            <div className="hidden lg:block"><LatestWidget articles={articles} /></div>
             <AdBanner ad={demoAds.sidebar} variant="square" />
           </aside>
         </div>

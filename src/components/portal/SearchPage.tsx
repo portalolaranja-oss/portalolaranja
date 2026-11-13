@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useSearch } from "@tanstack/react-router";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { demoArticles, type Article } from "@/data/demo";
+import { getPortalArticles } from "@/lib/news";
 import { PageLayout } from "@/components/portal/PageLayout";
 import { SectionTitle } from "@/components/portal/SectionTitle";
 import { AdBanner } from "@/components/portal/AdBanner";
@@ -16,12 +17,24 @@ export function SearchPage() {
   const [q, setQ] = useState(search.q ?? "");
   const [categoria, setCategoria] = useState(search.categoria ?? "");
   const [submitted, setSubmitted] = useState<{ q: string; categoria: string }>({ q: search.q ?? "", categoria: search.categoria ?? "" });
+  const [articles, setArticles] = useState<Article[]>(demoArticles);
 
-  const categories = Array.from(new Set(demoArticles.map((a) => a.category)));
+  // Usa as publicadas (Supabase + demo) quando disponíveis.
+  useEffect(() => {
+    let active = true;
+    getPortalArticles().then((list) => {
+      if (active && list.length) setArticles(list);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const categories = Array.from(new Set(articles.map((a) => a.category)));
 
   const query = submitted.q.trim().toLowerCase();
   const cat = submitted.categoria;
-  const results = demoArticles.filter((a) => {
+  const results = articles.filter((a) => {
     const matchesCat = cat ? a.category.toLowerCase() === cat.toLowerCase() : true;
     if (!matchesCat) return false;
     if (!query) return true;

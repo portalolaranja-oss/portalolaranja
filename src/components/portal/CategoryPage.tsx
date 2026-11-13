@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { demoArticles, type Article } from "@/data/demo";
-import { articleLink, categoryPath } from "@/lib/links";
+import { getPortalArticles } from "@/lib/news";
+import { articleLink } from "@/lib/links";
 import { SearchX, Newspaper } from "lucide-react";
 import { PageLayout } from "@/components/portal/PageLayout";
 import { SectionTitle } from "@/components/portal/SectionTitle";
@@ -99,18 +101,37 @@ function stripAccents(s: string) {
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/-/g, " ").trim().toLowerCase();
 }
 
+/**
+ * Busca as notícias da categoria combinando o demo com as publicadas no
+ * Supabase (quando conectado). Resolve o nome exibido e o conjunto de artigos.
+ */
 export function useCategoryArticles(raw: string): { name: string; articles: Article[] } {
+  const [list, setList] = useState<Article[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    getPortalArticles().then((a) => {
+      if (active) setList(a);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Antes do carregamento (SSR / primeiro paint), usa o demo como base.
+  const source = list.length ? list : demoArticles;
+
   const norm = raw.trim().toLowerCase();
-  const exact = demoArticles.find((a) => a.category.toLowerCase() === norm);
-  if (exact) return { name: exact.category, articles: demoArticles.filter((a) => a.category === exact.category) };
+  const exact = source.find((a) => a.category.toLowerCase() === norm);
+  if (exact) return { name: exact.category, articles: source.filter((a) => a.category === exact.category) };
 
   const slug = norm.replace(/-/g, " ");
   const slugNorm = stripAccents(slug);
-  const fuzzy = demoArticles.find((a) => {
+  const fuzzy = source.find((a) => {
     const cat = stripAccents(a.category);
     return cat === slugNorm || cat.includes(slugNorm) || slugNorm.includes(cat);
   });
-  if (fuzzy) return { name: fuzzy.category, articles: demoArticles.filter((a) => a.category === fuzzy.category) };
+  if (fuzzy) return { name: fuzzy.category, articles: source.filter((a) => a.category === fuzzy.category) };
 
   const pretty = raw.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   return { name: pretty, articles: [] };

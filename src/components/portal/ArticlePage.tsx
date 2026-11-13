@@ -126,15 +126,29 @@ export function ArticlePageContent({ article, all }: { article: Article; all: Ar
         <h1 className="text-3xl font-extrabold leading-tight md:text-4xl">{article.title}</h1>
         <p className="text-lg text-muted-foreground">{article.excerpt}</p>
         <div className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-3 text-sm">
-          <span className="font-semibold">Por {article.author}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold">Por {article.author}</span>
+            {article.source && <span className="text-muted-foreground">· Fonte: {article.source}</span>}
+          </div>
           <ShareButtons article={article} />
         </div>
       </header>
 
       <figure className="mb-8 overflow-hidden rounded-2xl border border-border shadow-card">
         <img src={article.image} alt={article.title} className="aspect-video w-full object-cover" />
-        <figcaption className="px-4 py-2 text-xs text-muted-foreground">Foto: {article.author} / Portal O Laranja</figcaption>
+        <figcaption className="px-4 py-2 text-xs text-muted-foreground">{article.credits ? `Foto: ${article.credits}` : `Foto: ${article.author} / Portal O Laranja`}</figcaption>
       </figure>
+
+      {article.gallery && article.gallery.length > 0 && (
+        <figure className="mb-8 overflow-hidden rounded-2xl border border-border shadow-card">
+          <div className="grid grid-cols-2 gap-1 md:grid-cols-3">
+            {article.gallery.map((url, i) => (
+              <img key={i} src={url} alt={article.title} loading="lazy" className="aspect-video w-full object-cover" />
+            ))}
+          </div>
+          {article.credits && <figcaption className="px-4 py-2 text-xs text-muted-foreground">Imagens: {article.credits}</figcaption>}
+        </figure>
+      )}
 
       <div className="space-y-5 text-base leading-7 md:text-lg md:leading-8">
         {body.map((p, i) => (
