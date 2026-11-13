@@ -1,11 +1,11 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Eye, EyeOff, Lock, Mail, LogIn, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { brand } from "@/lib/brand";
-import { adminSignIn, adminSession } from "@/lib/admin-auth";
+import { adminSessionAsync, adminSignInAsync } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
@@ -20,12 +20,20 @@ function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
 
-  // Já logado: direto pro painel.
-  if (adminSession()) {
+  // Já logado: direto pro painel. Verifica a sessão real (Supabase ou local).
+  useEffect(() => {
+    adminSessionAsync().then((s) => {
+      setChecking(false);
+      if (s) navigate({ to: "/admin", replace: true });
+    });
+  }, [navigate]);
+
+  if (checking) {
     return (
       <div className="flex min-h-screen items-center justify-center p-6 text-sm text-muted-foreground">
-        Redirecionando…
+        Verificando sessão…
       </div>
     );
   }
@@ -33,9 +41,9 @@ function Login() {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    // pequena pausa visual para o feedback do botão
+    // Pequena pausa visual só no modo local (Supabase já tem latência real).
     await new Promise((r) => setTimeout(r, 350));
-    const session = adminSignIn(email, senha);
+    const session = await adminSignInAsync(email, senha);
     setLoading(false);
     if (!session) {
       toast.error("Credenciais inválidas", {
@@ -43,9 +51,7 @@ function Login() {
       });
       return;
     }
-    toast.success(`Bem-vindo(a), ${session.name}!`, {
-      description: "Autenticação real por e-mail/senha (Supabase) vem na próxima etapa.",
-    });
+    toast.success(`Bem-vindo(a), ${session.name}!`);
     navigate({ to: "/admin" });
   }
 

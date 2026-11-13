@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Search,
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { brand } from "@/lib/brand";
-import { adminSession, adminSignOut, adminInitials } from "@/lib/admin-auth";
+import { adminInitials, type AdminSession } from "@/lib/admin-auth";
 
 export const adminMenu = [
   { label: "Visão geral", to: "/admin", icon: LayoutDashboard },
@@ -35,15 +35,16 @@ export const adminMenu = [
   { label: "Configurações", to: "/admin/configuracoes", icon: Settings },
 ] as const;
 
-export function AdminSidebar({ current }: { current: string }) {
+export function AdminSidebar({
+  current,
+  session,
+  onLogout,
+}: {
+  current: string;
+  session: AdminSession | null;
+  onLogout: () => void;
+}) {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const session = adminSession();
-
-  function handleLogout() {
-    adminSignOut();
-    navigate({ to: "/admin/login" });
-  }
 
   return (
     <>
@@ -130,7 +131,7 @@ export function AdminSidebar({ current }: { current: string }) {
             </Link>
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={onLogout}
               aria-label="Sair"
               className="flex items-center justify-center rounded-md border border-input px-3 py-2 text-muted-foreground transition-colors hover:text-foreground"
             >

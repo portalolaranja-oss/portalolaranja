@@ -1,9 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Newspaper, FileEdit, Plus, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminSidebar } from "./AdminSidebar";
-import { adminSignOut, adminSession, isAdminAuthed } from "@/lib/admin-auth";
+import {
+  adminSessionAsync,
+  adminSignOutAsync,
+  type AdminSession,
+} from "@/lib/admin-auth";
 
 export function AdminLayout({
   current,
@@ -17,16 +21,25 @@ export function AdminLayout({
   children: React.ReactNode; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
   const navigate = useNavigate();
+  const [session, setSession] = useState<AdminSession | null>(null);
+  const [ready, setReady] = useState(false);
 
-  // Guard: protege as rotas do painel contra acesso não autorizado.
-  // (hoje valida a sessão local; virará `supabase.auth.getUser()` quando o banco for conectado)
+  // Guard: protege as rotas do painel. Verifica a sessão real
+  // (Supabase `getUser()` ou fallback local) e redireciona se não for autenticado.
   useEffect(() => {
-    if (!isAdminAuthed()) {
-      navigate({ to: "/admin/login", replace: true });
-    }
+    adminSessionAsync().then((s) => {
+      setSession(s);
+      setReady(true);
+      if (!s) navigate({ to: "/admin/login", replace: true });
+    });
   }, [navigate]);
 
-  if (!isAdminAuthed()) {
+  async function handleLogout() {
+    await adminSignOutAsync();
+    navigate({ to: "/admin/login" });
+  }
+
+  if (!ready || !session) {
     // evita flash de conteúdo; login redireciona
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface text-sm text-muted-foreground">
@@ -35,16 +48,9 @@ export function AdminLayout({
     );
   }
 
-  const session = adminSession();
-
-  function handleLogout() {
-    adminSignOut();
-    navigate({ to: "/admin/login" });
-  }
-
   return (
     <div className="flex min-h-screen">
-      <AdminSidebar current={current} />
+      <AdminSidebar current={current} session={session} onLogout={handleLogout} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background/90 px-4 py-3 backdrop-blur-md md:px-8">
