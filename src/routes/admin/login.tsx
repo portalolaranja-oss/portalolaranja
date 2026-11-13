@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Eye, EyeOff, Lock, Mail, LogIn } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, LogIn, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { brand } from "@/lib/brand";
+import { adminSignIn, adminSession } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
@@ -16,12 +17,34 @@ export const Route = createFileRoute("/admin/login")({
 function Login() {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  // Já logado: direto pro painel.
+  if (adminSession()) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-6 text-sm text-muted-foreground">
+        Redirecionando…
+      </div>
+    );
+  }
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Autenticação real e integração com Supabase virão na próxima etapa.
-    toast.success("Bem-vindo(a) ao painel!", {
-      description: "Login demonstrativo — a autenticação real chegará com o Supabase.",
+    setLoading(true);
+    // pequena pausa visual para o feedback do botão
+    await new Promise((r) => setTimeout(r, 350));
+    const session = adminSignIn(email, senha);
+    setLoading(false);
+    if (!session) {
+      toast.error("Credenciais inválidas", {
+        description: "Confira e-mail e senha e tente novamente.",
+      });
+      return;
+    }
+    toast.success(`Bem-vindo(a), ${session.name}!`, {
+      description: "Autenticação real por e-mail/senha (Supabase) vem na próxima etapa.",
     });
     navigate({ to: "/admin" });
   }
@@ -62,6 +85,8 @@ function Login() {
                   id="email"
                   type="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="voce@portalolaranja.com.br"
                   className="pl-9"
                   autoComplete="email"
@@ -79,6 +104,8 @@ function Login() {
                   id="senha"
                   type={showPass ? "text" : "password"}
                   required
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                   placeholder="••••••••"
                   className="pl-9 pr-9"
                   autoComplete="current-password"
@@ -98,8 +125,8 @@ function Login() {
               <input type="checkbox" className="h-4 w-4 rounded border-input accent-[oklch(0.72_0.19_50)]" /> Manter conectado
             </label>
 
-            <Button type="submit" variant="hero" className="w-full">
-              <LogIn /> Entrar
+            <Button type="submit" variant="hero" className="w-full" disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" /> : <LogIn />} {loading ? "Entrando…" : "Entrar"}
             </Button>
           </form>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Search,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { brand } from "@/lib/brand";
+import { adminSession, adminSignOut, adminInitials } from "@/lib/admin-auth";
 
 export const adminMenu = [
   { label: "Visão geral", to: "/admin", icon: LayoutDashboard },
@@ -36,6 +37,13 @@ export const adminMenu = [
 
 export function AdminSidebar({ current }: { current: string }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const session = adminSession();
+
+  function handleLogout() {
+    adminSignOut();
+    navigate({ to: "/admin/login" });
+  }
 
   return (
     <>
@@ -106,11 +114,11 @@ export function AdminSidebar({ current }: { current: string }) {
         <div className="border-t border-border px-4 py-4">
           <div className="mb-3 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary font-display text-sm font-bold text-primary-foreground">
-              OL
+              {adminInitials(session)}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">Editor Admin</p>
-              <p className="truncate text-xs text-muted-foreground">admin@portalolaranja.com.br</p>
+              <p className="truncate text-sm font-semibold">{session?.name ?? "Editor Admin"}</p>
+              <p className="truncate text-xs text-muted-foreground">{session?.email ?? "admin@portalolaranja.com.br"}</p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -120,13 +128,14 @@ export function AdminSidebar({ current }: { current: string }) {
             >
               Ver site
             </Link>
-            <Link
-              to="/admin/login"
+            <button
+              type="button"
+              onClick={handleLogout}
               aria-label="Sair"
               className="flex items-center justify-center rounded-md border border-input px-3 py-2 text-muted-foreground transition-colors hover:text-foreground"
             >
               <LogOut className="h-4 w-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

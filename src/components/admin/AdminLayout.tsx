@@ -1,7 +1,9 @@
-import { Link } from "@tanstack/react-router";
-import { Newspaper, FileEdit, Plus } from "lucide-react";
+import { useEffect } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Newspaper, FileEdit, Plus, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminSidebar } from "./AdminSidebar";
+import { adminSignOut, adminSession, isAdminAuthed } from "@/lib/admin-auth";
 
 export function AdminLayout({
   current,
@@ -12,8 +14,34 @@ export function AdminLayout({
   current: string;
   title: string;
   description?: string;
-  children: React.ReactNode;
+  children: React.ReactNode; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
+  const navigate = useNavigate();
+
+  // Guard: protege as rotas do painel contra acesso não autorizado.
+  // (hoje valida a sessão local; virará `supabase.auth.getUser()` quando o banco for conectado)
+  useEffect(() => {
+    if (!isAdminAuthed()) {
+      navigate({ to: "/admin/login", replace: true });
+    }
+  }, [navigate]);
+
+  if (!isAdminAuthed()) {
+    // evita flash de conteúdo; login redireciona
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface text-sm text-muted-foreground">
+        Verificando acesso…
+      </div>
+    );
+  }
+
+  const session = adminSession();
+
+  function handleLogout() {
+    adminSignOut();
+    navigate({ to: "/admin/login" });
+  }
+
   return (
     <div className="flex min-h-screen">
       <AdminSidebar current={current} />
@@ -40,13 +68,16 @@ export function AdminLayout({
                 <FileEdit className="mr-1.5 h-4 w-4" /> Rascunhos
               </Button>
             </Link>
+            <Button variant="ghost" size="sm" onClick={handleLogout} title="Sair">
+              <LogOut className="mr-1.5 h-4 w-4" /> Sair
+            </Button>
           </div>
         </header>
 
         <main className="flex-1 space-y-6 p-4 md:p-8">{children}</main>
 
         <footer className="border-t border-border px-4 py-4 text-xs text-muted-foreground md:px-8">
-          Painel do Portal O Laranja — estrutura preparada para integração futura com Supabase.
+          Painel do Portal O Laranja — {session?.email ?? "admin"} • estrutura preparada para integração futura com Supabase.
         </footer>
       </div>
     </div>
